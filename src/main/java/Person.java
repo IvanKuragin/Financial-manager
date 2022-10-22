@@ -7,10 +7,13 @@ import org.json.simple.JSONObject;
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Person {
+
     protected File TsvFile;
     protected File jsonFile;
+    protected int[] money;
     protected int foodSpent = 0;
     protected int clothesSpent = 0;
     protected int financialSpent = 0;
@@ -25,6 +28,7 @@ public class Person {
     public Person(String name) {
         this.name = name;
         TsvFile = new File("categories.tsv");
+        money = new int[5];
     }
 
     public boolean createTsvFile() {
@@ -63,15 +67,14 @@ public class Person {
         String sum = (String) json.get("sum");
         String sum1 = sum.replace("\"", "");
         int sum2 = Integer.parseInt(sum1);
-        List<Integer> listOfSpent = new ArrayList<>();
         if (categorySaved == null) {
             categorySaved = (String) json.get("category");
         }
         switch (category) {
             case ("еда"):
                 foodSpent += sum2;
-                listOfSpent.add(0,foodSpent);
-                if (listOfSpent.get(0) > max1 & listOfSpent.get(0) > 0) {
+                money[0] = foodSpent;
+                if (money[0] > max1 & money[0] > 0) {
                     json.put("category", category);
                     categorySaved = (String) json.get("category");
                 } else {
@@ -80,8 +83,8 @@ public class Person {
                 break;
             case ("одежда"):
                 clothesSpent += sum2;
-                listOfSpent.add(1, clothesSpent);
-                if (listOfSpent.get(1) > max1 & listOfSpent.get(1) > 0) {
+                money[1] = clothesSpent;
+                if (money[1] > max1 & money[1] > 0) {
                     json.put("category", category);
                     categorySaved = (String) json.get("category");
                 } else {
@@ -90,8 +93,8 @@ public class Person {
                 break;
             case ("быт"):
                 houseHoldSpent += sum2;
-                listOfSpent.add(2, houseHoldSpent);
-                if (listOfSpent.get(2) > max1 & listOfSpent.get(2) > 0) {
+                money[2] = houseHoldSpent;
+                if (money[2] > max1 & money[2] > 0) {
                     json.put("category", category);
                     categorySaved = (String) json.get("category");
                 } else {
@@ -100,8 +103,8 @@ public class Person {
                 break;
             case ("финансы"):
                 financialSpent += sum2;
-                listOfSpent.add(2, financialSpent);
-                if (listOfSpent.get(3) > max1 & listOfSpent.get(3) > 0) {
+                money[3] = financialSpent;
+                if (money[3] > max1 & money[3] > 0) {
                     json.put("category", category);
                     categorySaved = (String) json.get("category");
                 } else {
@@ -110,8 +113,8 @@ public class Person {
                 break;
             default:
                 otherSpent += sum2;
-                listOfSpent.add(2, otherSpent);
-                if (listOfSpent.get(4) > max1 & listOfSpent.get(4) > 0) {
+                money[4] = otherSpent;
+                if (money[4] > max1 & money[4] > 0) {
                     json.put("category", category);
                     categorySaved = (String) json.get("category");
                 } else {
@@ -119,6 +122,7 @@ public class Person {
                 }
                 break;
         }
+        List<Integer> listOfSpent = Arrays.stream(money).boxed().collect(Collectors.toList());
         max1 = Collections.max(listOfSpent);
         json.put("sum", max1);
         JSONObject max = new JSONObject();
