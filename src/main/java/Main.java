@@ -1,9 +1,10 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Map;
 
 public class Main {
 
@@ -17,7 +18,7 @@ public class Main {
             System.out.println(error.getMessage());
         }
         Person person;
-        if(Person.loadFromJson(jsonFile) == null) {
+        if (Person.loadFromJson(jsonFile) == null) {
             person = new Person("Жорик");
             boolean isCreated = person.createTsvFile();
             person.setTsvFile();
@@ -34,13 +35,11 @@ public class Main {
                 ) {
                     System.out.printf("Соединение установлено! Привет, %s%n", person.getName());
                     String data = in.readLine();
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    Gson gson = gsonBuilder.create();
+                    JsonObject json = gson.fromJson(data, JsonObject.class);
                     System.out.println(data);
-                    String data1 = data.replace("\"", "");
-                    String data2 = data1.replace(":", " ");
-                    String data3 = data2.replace("{", "");
-                    String data4 = data3.replace("}", "");
-                    Map<String, String> mapa = JsonBuilder.jsonConverter(data4);
-                    JSONObject added = JsonBuilder.tsvComparator(mapa, person.getTsvFile());
+                    JSONObject added = TsvComparator.tsvComparator(json.getTitle(), json.getSum(), person.getTsvFile());
                     JSONObject max = person.maxCount(added);
                     out.println(max);
                     person.saveToJson(jsonFile);

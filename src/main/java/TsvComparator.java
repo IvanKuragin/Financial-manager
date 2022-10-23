@@ -6,30 +6,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class JsonBuilder {
+public class TsvComparator {
 
-    public static Map<String, String> jsonConverter(String data) {
-        Map<String, String> mapa = new HashMap<>();
-        String[] dataArray = data.split(",");
-        String firstCell = dataArray[0];
-        String[] firstCellArray = firstCell.split(" ");
-        mapa.put(firstCellArray[0], firstCellArray[1]);
-        String secondCell = dataArray[1];
-        String[] secondCellArray = secondCell.split(" ");
-        mapa.put(secondCellArray[0], secondCellArray[1]);
-        String thirdCell = dataArray[2];
-        String[] thirdCellArray = thirdCell.split(" ");
-        mapa.put(thirdCellArray[0], thirdCellArray[1]);
-        return mapa;
-    }
-
-    public static JSONObject tsvComparator(Map<String, String> mapa, File file) {
+    public static JSONObject tsvComparator(String title, int sum, File file) {
         JSONObject sumAndCategory = new JSONObject();
-        sumAndCategory.put("sum", mapa.get("sum"));
+        sumAndCategory.put("sum", sum);
         TsvParserSettings settings = new TsvParserSettings();
         TsvParser parser = new TsvParser(settings);
         try {
@@ -40,7 +23,7 @@ public class JsonBuilder {
                 String row2 = row1.replace("[", "");
                 String row3 = row2.replace("]", "");
                 String[] row4 = row3.split(" ");
-                if (mapa.get("title").equals(row4[0])) {
+                if (title.equals(row4[0])) {
                     sumAndCategory.put("category", row4[1]);
                     break;
                 } else {

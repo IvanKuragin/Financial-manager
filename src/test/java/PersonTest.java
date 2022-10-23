@@ -18,15 +18,13 @@ public class PersonTest {
     void maxCountTest() {
         JSONObject test = new JSONObject();
         test.put("category", "еда");
-        test.put("sum", "200");
+        test.put("sum", 200);
         Person person = new Person("Чаки");
         JSONObject json = new JSONObject();
         json.put("category", "еда");
-        json.put("sum", "200");
-        String sum = (String) json.get("sum");
-        String sum1 = sum.replace("\"", "");
-        int sum2 = Integer.parseInt(sum1);
-        int max1 = foodSpent += sum2;
+        json.put("sum", 200);
+        int sum = (int) json.get("sum");
+        int max1 = foodSpent += sum;
         List<Integer> listOfSpent = List.of(20, 60, 80, max1);
         max = Collections.max(listOfSpent);
         json.put("sum", max);
